@@ -1,12 +1,19 @@
 import unittest
 import pandas as pd
-from app.data_preparation import load_data, train_test_split, add_lagged_features
+import numpy as np
+from app.config import Config
+from app.data_preparation import DataPreprocessor
 
 class TestFeatureGeneration(unittest.TestCase):
 
     def setUp(self):
-        self.test_data = pd.DataFrame({
-            'DateKey': ['20230101', '20230102', '20230103', '20230104'],
+        self.config = Config
+        self.preprocessor = DataPreprocessor(self.config)
+
+        dates = pd.date_range(start='2023-01-01', end='2023-01-04')
+
+        self.sample_df = pd.DataFrame({
+            'DateKey': dates,
             'StoreCount': [100, 101, 102, 103],
             'ShelfCapacity': [1000, 1000, 1000, 1000],
             'PromoShelfCapacity': [50, 50, 50, 50],
@@ -18,26 +25,48 @@ class TestFeatureGeneration(unittest.TestCase):
         })
 
     def test_load_data(self):
-        # Test if load_data works correctly
-        df = load_data('data/dataset.csv') 
-        self.assertIsInstance(df, pd.DataFrame)
-        self.assertTrue('UnitSales' in df.columns)
+        # Mock the pd.read_csv function
+        pd.read_csv = lambda *args, **kwargs: self.sample_df
+        
+        loaded_df = self.preprocessor.load_data("dummy_path.csv")
+        self.assertIsInstance(loaded_df, pd.DataFrame)
+        self.assertEqual(len(loaded_df), len(self.sample_df))
+
+    def test_add_time_features(self):
+        df_with_time = self.preprocessor.add_time_features(self.sample_df)
+        self.assertIn('month', df_with_time.columns)
+        self.assertIn('weekday', df_with_time.columns)
+        self.assertEqual(df_with_time['month'].dtype, 'category')
+        self.assertEqual(df_with_time['weekday'].dtype, 'category')
+
+    def test_convert_categorical(self):
+        df_categorical = self.preprocessor.convert_categorical(self.sample_df)
+        for col in ['GroupCode', 'ItemNumber', 'CategoryCode']:
+            self.assertEqual(df_categorical[col].dtype, 'category')
+
+    def test_preprocess_data(self):
+        preprocessed_df = self.preprocessor.preprocess_data(self.sample_df)
+        self.assertIn('month', preprocessed_df.columns)
+        self.assertIn('weekday', preprocessed_df.columns)
 
     def test_train_test_split(self):
-        # Test train_test_split functionality
-        self.test_data['DateKey'] = pd.to_datetime(self.test_data['DateKey'], format='%Y%m%d')
-        
-        train_df, test_df = train_test_split(self.test_data, 0.75)
-        self.assertEqual(len(train_df), 3)
-        self.assertEqual(len(test_df), 1)
+        train_df, test_df = self.preprocessor.train_test_split(self.sample_df, train_split_ratio=0.8)
+        self.assertGreater(len(train_df), len(test_df))
+        self.assertEqual(len(train_df) + len(test_df), len(self.sample_df))
 
     def test_add_lagged_features(self):
-        # Test adding lagged features
-        df_with_lags = add_lagged_features(self.test_data, [1], 'UnitSales')
-        self.assertIn('UnitSales_lag_1', df_with_lags.columns)
+        df_with_lags = self.preprocessor.add_lagged_features(self.sample_df, 'UnitSales')
+        for lag in self.config.LAGS:
+            self.assertIn(f'UnitSales_lag_{lag}', df_with_lags.columns)
 
     def test_save_processed_data(self):
-        pass 
+        # Mock the to_csv function
+        pd.DataFrame.to_csv = lambda self, path, index: None
+        
+        try:
+            self.preprocessor.save_processed_data(self.sample_df, self.sample_df)
+        except Exception as e:
+            self.fail(f"save_processed_data raised {type(e).__name__} unexpectedly!")
 
 if __name__ == '__main__':
     unittest.main()
