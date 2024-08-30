@@ -36,7 +36,7 @@ pd.set_option("display.max_columns", 100)
 # ### Read data
 
 # %%
-path = "data/dataset.csv"
+path = "dataset.csv"
 
 df_prep = pd.read_csv(path, sep=";", header=0)
 df_prep.head(5)
@@ -142,7 +142,7 @@ def add_lagged_feature_to_df(input_df, lag_iterator, feature):
         # we join this dataframe on the original dataframe to add the lagged variable as feature
         output_df = output_df.merge(df_to_lag, how='left', on=['DateKey', 'ItemNumber'])
     # drop na rows that have been caused by these lags
-    return output_df
+    return output_df.dropna()
 
 # %%
 range_of_lags = [7, 14, 21] # 1 week ago, 2 weeks ago, 3 weeks ago
