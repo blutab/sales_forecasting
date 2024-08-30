@@ -4,20 +4,29 @@ import numpy as np
 from unittest.mock import patch, MagicMock
 from sklearn.ensemble import RandomForestRegressor
 from app.config import Config
-from app.inference import Inferencer, main
-from app.utils import load_model, evaluate_model
+from app.inference import Inferencer
+from app.utils import load_model
 
 class TestModelInference(unittest.TestCase):
 
     def setUp(self):
         self.config = Config
 
-        with patch('app.utils.load_model') as mock_load_model:
-            mock_model = MagicMock(spec=RandomForestRegressor)
-            mock_load_model.return_value = mock_model
-            self.inferencer = Inferencer(self.config)
+        # Patch the load_model function specifically in the context of the Inferencer
+        patcher = patch('app.inference.load_model', autospec=True)
+        self.mock_load_model = patcher.start()
+
+        # Ensure that the mock returns a MagicMock of a RandomForestRegressor
+        self.mock_load_model.return_value = MagicMock(spec=RandomForestRegressor)
+
+        # Instantiate the Inferencer with the mocked model loading
+        self.inferencer = Inferencer(self.config)
+
+        # Stop patching after tests to clean up
+        self.addCleanup(patcher.stop)
 
     def test_convert_log_to_units(self):
+
         log_value = 5.0
         expected_units = round(np.exp(log_value))
         self.assertEqual(self.inferencer.convert_log_to_units(log_value), expected_units)
