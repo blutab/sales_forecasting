@@ -28,9 +28,13 @@ class App:
             
             processed_df = self.preprocessor.preprocess_data(input_df)
             processed_df = self.preprocessor.add_lagged_features(processed_df, 'UnitSales')
+
+            # Check if the processed_df is empty after preprocessing
+            if processed_df.empty:
+                return jsonify({"error": "Not enough data after preprocessing to make a prediction."}), 400
             
-            prediction = self.inferencer.predict(processed_df)[0]
-            prediction_units = self.inferencer.convert_log_to_units(prediction)
+            
+            prediction_units = self.inferencer.get_predictions(processed_df)
             
             return jsonify({'prediction': prediction_units})
         
@@ -54,4 +58,4 @@ def create_app(config: Config) -> Flask:
 
 if __name__ == '__main__':
     app = create_app(Config)
-    app.run(debug=Config.DEBUG)
+    app.run(host="0.0.0.0", port=5000, debug=True)

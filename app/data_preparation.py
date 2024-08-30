@@ -112,6 +112,13 @@ class DataPreprocessor:
                 feature
             ].shift(lag)
 
+        # Fill NaN values for all lagged features in one go
+        lagged_cols = [f"{feature}_lag_{lag}" for lag in Config.LAGS]
+        df[lagged_cols] = df[lagged_cols].fillna(0)
+
+        # Log the number of rows remaining after handling missing values
+        logging.info(f"After handling missing values, {len(df)} rows remain.")
+
         return df.dropna()
 
     def save_processed_data(self, train_df: pd.DataFrame, test_df: pd.DataFrame):

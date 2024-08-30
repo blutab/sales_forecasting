@@ -19,16 +19,18 @@ class Inferencer:
     def convert_log_to_units(self, prediction: float) -> int:
         return round(math.exp(prediction))
 
-    def run_inference(self, test_df: pd.DataFrame):
+    def get_predictions(self, test_df: pd.DataFrame):
         with mlflow.start_run():
             # Separate features and target variable
             test_y = test_df["UnitSales"]
             test_X = test_df.drop(columns=["UnitSales", "DateKey"])
 
             # Evaluate the model
-            rmse, mae = evaluate_model(self.model, test_X, test_y)
+            predictions, rmse, mae = evaluate_model(self.model, test_X, test_y)
             mlflow.log_metric("rmse", rmse)
             mlflow.log_metric("mae", mae)
+
+            converted_predictions = self.convert_log_to_units(predictions)
 
             # Example prediction and logging results
             example_pred = self.model.predict(test_X.head(1))
@@ -36,12 +38,14 @@ class Inferencer:
             logging.info(
                 "Predicted UnitSales: " f"{self.convert_log_to_units(example_pred[0])}"
             )
+            return converted_predictions
 
 
 def main():
     inferencer = Inferencer(Config)
     test_df = load_processed_data(Config.PROCESSED_TEST_PATH)
-    inferencer.run_inference(test_df)
+    predictions = inferencer.get_predictions(test_df)
+    return predictions
 
 
 if __name__ == "__main__":

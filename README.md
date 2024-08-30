@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project develops a sales forecasting model to help a ecommerce company run successful promotion campaigns. This model predicts the effect of promotions on sales for various items which is crucial for campaign planning and stock level discussions with suppliers.
+This project develops a sales forecasting model to help Albert Heijn run successful promotion campaigns. This model predicts the effect of promotions on sales for various items which is crucial for campaign planning and stock level discussions with suppliers.
 The model, built with a `RandomForestRegressor` from Scikit-learn, and encompasses data preprocessing, model training, evaluation, and an API for predictions.
 
 ## Table of Contents
@@ -40,10 +40,7 @@ SALES_FORECASTING/
 │   └── test_train.py
 ├── Dockerfile
 ├── pyproject.toml
-├── poetry.lock
 ├── README.md
-└── mlruns/
-    └── (MLflow runs and artifacts)
 ```
 
 ## Installation
@@ -92,26 +89,14 @@ Place your datasets in the `data/` directory. The data should be in CSV format w
 
 1. Run the Flask App:
    ```
-   poetry run python app/app.py
+   poetry run python app.py
    ```
 
 2. Send a Prediction Request:
    Send a POST request to the `/predict` endpoint with the required input features in JSON format. For example:
 
-   ```json
-   {
-     "StoreCount": 100,
-     "ShelfCapacity": 1000,
-     "PromoShelfCapacity": 50,
-     "IsPromo": true,
-     "ItemNumber": 1,
-     "CategoryCode": 100,
-     "GroupCode": 10,
-     "month": 1,
-     "weekday": 0,
-     "UnitSales": 500,
-     "DateKey": "20240101"
-   }
+   ```bash
+   curl -X POST -H "Content-Type: application/json" -d '{"StoreCount": 5, "ShelfCapacity": 100, "PromoShelfCapacity": 50, "IsPromo": 1, "ItemNumber": 12345, "CategoryCode": 678, "GroupCode": 9, "UnitSales": 10, "DateKey": "20230829"}' http://127.0.0.1:5000/predict
    ```
 
 3. Response:
@@ -141,10 +126,10 @@ To containerize the application, use the provided Dockerfile.
 
 2. Run the Docker Container:
    ```
-   docker run -p 5000:5000 sales-forecasting-app
+   docker run -p 8080:5000 sales-forecasting-app
    ```
 
-The Flask API will be available at `http://localhost:5000`.
+The Flask API will be available at `http://localhost:8080`.
 
 ## Contributing
 

@@ -34,7 +34,7 @@ def evaluate_model(
     mae = mean_absolute_error(test_y, predictions)
     logging.info(f"Model evaluation completed: RMSE={rmse}, MAE={mae}")
 
-    return rmse, mae
+    return predictions,rmse, mae
 
 
 def load_model(path: str) -> Any:
