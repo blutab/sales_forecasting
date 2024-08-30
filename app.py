@@ -23,7 +23,12 @@ class App:
     def predict(self):
         try:
             input_data = request.get_json()
-            input_df = pd.DataFrame([input_data])
+            # Check if input_data is a list of dictionaries (multiple rows)
+            if isinstance(input_data, list):
+                input_df = pd.DataFrame(input_data)
+            else:
+                return jsonify({"error": "Please send a list of dictionaries as input"}), 400
+
             self.validate_input_data(input_df)
             
             processed_df = self.preprocessor.preprocess_data(input_df)
@@ -34,7 +39,7 @@ class App:
                 return jsonify({"error": "Not enough data after preprocessing to make a prediction."}), 400
             
             
-            prediction_units = self.inferencer.get_predictions(processed_df)
+            prediction_units = self.inferencer.get_predictions(processed_df).tolist()
             
             return jsonify({'prediction': prediction_units})
         
@@ -58,4 +63,4 @@ def create_app(config: Config) -> Flask:
 
 if __name__ == '__main__':
     app = create_app(Config)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)

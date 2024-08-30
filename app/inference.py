@@ -1,5 +1,5 @@
 import pandas as pd
-import math
+import numpy as np
 import mlflow
 import logging
 from app.config import Config
@@ -17,7 +17,7 @@ class Inferencer:
         self.model = load_model(Config.MODEL_PATH)
 
     def convert_log_to_units(self, prediction: float) -> int:
-        return round(math.exp(prediction))
+        return np.round(np.exp(prediction))
 
     def get_predictions(self, test_df: pd.DataFrame):
         with mlflow.start_run():
