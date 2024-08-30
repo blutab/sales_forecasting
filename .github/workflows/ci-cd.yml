@@ -27,8 +27,9 @@ jobs:
         poetry install --no-root
     - name: Run linters
       run: |
-        poetry run flake8 app/
         poetry run black --check app/
+        poetry run flake8 app/
+        
 
   test:
     runs-on: ubuntu-latest

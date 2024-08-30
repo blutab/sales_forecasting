@@ -8,8 +8,7 @@ from app.utils import load_processed_data, evaluate_model, save_model
 
 # Set up logging
 logging.basicConfig(
-    level=Config.LOGGING_LEVEL,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -35,8 +34,7 @@ class ModelTrainer:
         Returns:
         - RandomForestRegressor : Trained model.
         """
-        logging.info("Training RandomForestRegressor "
-                     f"model with {model_params}")
+        logging.info("Training RandomForestRegressor " f"model with {model_params}")
 
         model = RandomForestRegressor(**model_params)
         model.fit(train_X, train_y)

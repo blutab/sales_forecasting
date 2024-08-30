@@ -5,8 +5,7 @@ from typing import Tuple
 from app.config import Config
 
 logging.basicConfig(
-    level=Config.LOGGING_LEVEL,
-    format="%(asctime)s - %(levelname)s - %(message)s"
+    level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -91,10 +90,7 @@ class DataPreprocessor:
         test_df = df[df["DateKey"].dt.date > split_date]
         return train_df, test_df
 
-    def add_lagged_features(
-            self,
-            df: pd.DataFrame,
-            feature: str) -> pd.DataFrame:
+    def add_lagged_features(self, df: pd.DataFrame, feature: str) -> pd.DataFrame:
         """
         Add lagged features to the DataFrame.
 
@@ -106,24 +102,19 @@ class DataPreprocessor:
         Returns:
         - pd.DataFrame : DataFrame with lagged features added.
         """
-        logging.info(f"Adding lagged features for {feature}"
-                     "with lags {Config.LAGS}")
+        logging.info(f"Adding lagged features for {feature}" "with lags {Config.LAGS}")
 
         # Ensure the DataFrame is sorted by 'ItemNumber' and 'DateKey'
         df = df.sort_values(by=["ItemNumber", "DateKey"])
 
         for lag in Config.LAGS:
-            df[f"{feature}_lag_{lag}"] = df.groupby(
-                "ItemNumber", observed=False
-                )[
+            df[f"{feature}_lag_{lag}"] = df.groupby("ItemNumber", observed=False)[
                 feature
             ].shift(lag)
 
         return df.dropna()
 
-    def save_processed_data(self,
-                            train_df: pd.DataFrame,
-                            test_df: pd.DataFrame):
+    def save_processed_data(self, train_df: pd.DataFrame, test_df: pd.DataFrame):
         """
         Save the processed training and test data to CSV files.
 
@@ -131,11 +122,11 @@ class DataPreprocessor:
         - train_df: pd.DataFrame : The training DataFrame to be saved.
         - test_df: pd.DataFrame : The test DataFrame to be saved.
         """
-        logging.info("Saving processed training data to "
-                     f"{Config.PROCESSED_TRAIN_PATH}")
+        logging.info(
+            "Saving processed training data to " f"{Config.PROCESSED_TRAIN_PATH}"
+        )
         train_df.to_csv(Config.PROCESSED_TRAIN_PATH, index=False)
-        logging.info("Saving processed test data to "
-                     f"{Config.PROCESSED_TEST_PATH}")
+        logging.info("Saving processed test data to " f"{Config.PROCESSED_TEST_PATH}")
         test_df.to_csv(Config.PROCESSED_TEST_PATH, index=False)
 
 
