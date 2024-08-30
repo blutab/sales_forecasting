@@ -10,6 +10,7 @@ logging.basicConfig(
     level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
 class Inferencer:
     def __init__(self, config: Config):
         self.config = config
@@ -39,11 +40,13 @@ class Inferencer:
             )
             return converted_predictions
 
+
 def main():
     inferencer = Inferencer(Config)
     test_df = load_processed_data(Config.PROCESSED_TEST_PATH)
     predictions = inferencer.get_predictions(test_df)
     return predictions
+
 
 if __name__ == "__main__":
     main()

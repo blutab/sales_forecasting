@@ -9,6 +9,7 @@ logging.basicConfig(
     level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
 def load_processed_data(path: str) -> pd.DataFrame:
     logging.info(f"Loading processed test data from {path}")
     try:
@@ -22,6 +23,7 @@ def load_processed_data(path: str) -> pd.DataFrame:
         logging.error(f"Error loading test data from {path}: {e}")
         raise e
 
+
 def evaluate_model(
     model: Any, test_X: pd.DataFrame, test_y: pd.Series
 ) -> Tuple[float, float]:
@@ -32,6 +34,7 @@ def evaluate_model(
     logging.info(f"Model evaluation completed: RMSE={rmse}, MAE={mae}")
 
     return predictions, rmse, mae
+
 
 def load_model_from_registry(model_name: str, stage: str = "Production") -> Any:
     """
@@ -47,11 +50,16 @@ def load_model_from_registry(model_name: str, stage: str = "Production") -> Any:
     logging.info(f"Loading {stage} model '{model_name}' from MLflow Model Registry")
     try:
         model = mlflow.pyfunc.load_model(f"models:/{model_name}/{stage}")
-        logging.info(f"Successfully loaded {stage} model '{model_name}' from MLflow Model Registry")
+        logging.info(
+            f"Successfully loaded {stage} model '{model_name}' from MLflow Model Registry"
+        )
         return model
     except mlflow.exceptions.MlflowException as e:
-        logging.error(f"Error loading model '{model_name}' from MLflow Model Registry: {e}")
+        logging.error(
+            f"Error loading model '{model_name}' from MLflow Model Registry: {e}"
+        )
         raise e
+
 
 def save_model(model: Any, path: str):
     """

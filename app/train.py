@@ -12,6 +12,7 @@ logging.basicConfig(
     level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+
 class ModelTrainer:
     def __init__(self, config: Config):
         self.config = config
@@ -63,9 +64,7 @@ class ModelTrainer:
         - stage: str : The new stage for the model (e.g., "Staging", "Production").
         """
         self.client.transition_model_version_stage(
-            name=model_name,
-            version=version,
-            stage=stage
+            name=model_name, version=version, stage=stage
         )
 
     def run_training(self):
@@ -97,7 +96,9 @@ class ModelTrainer:
             # Register the model
             model_name = "RandomForestRegressor"
             model_version = self.register_model(run.info.run_id, model_name)
-            logging.info(f"Model registered with name: {model_name}, version: {model_version}")
+            logging.info(
+                f"Model registered with name: {model_name}, version: {model_version}"
+            )
 
             # Transition the model to staging
             self.transition_model_stage(model_name, model_version, "Staging")
@@ -107,9 +108,11 @@ class ModelTrainer:
             # For now, we'll just log a message
             logging.info("TODO: Implement comparison with production model")
 
+
 def main():
     trainer = ModelTrainer(Config)
     trainer.run_training()
+
 
 if __name__ == "__main__":
     main()
