@@ -21,12 +21,13 @@ The model, built with a `RandomForestRegressor` from Scikit-learn, and encompass
 ## Directory Structure
 
 ```
-AH_CASE_STUDY/
+SALES_FORECASTING/
 ├── app/
 │   ├── __init__.py
 │   ├── config.py
 │   ├── data_preparation.py
 │   ├── inference.py
+│   ├── utils.py
 │   └── train.py
 ├── data/
 │   └── (Place your datasets here)
@@ -35,6 +36,7 @@ AH_CASE_STUDY/
 ├── tests/
 │   ├── test_data_preparation.py
 │   ├── test_inference.py
+│   ├── test_utils.py
 │   └── test_train.py
 ├── Dockerfile
 ├── pyproject.toml
@@ -57,7 +59,7 @@ AH_CASE_STUDY/
 1. Clone the Repository:
    ```
    git clone https://github.com/yourusername/sales-forecasting.git
-   cd sales-forecasting
+   cd sales_forecasting
    ```
 
 2. Install Dependencies:

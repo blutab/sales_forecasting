@@ -13,9 +13,9 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "train=sales_forecasting.train:main",
-            "inference=sales_forecasting.inference:main",
-            "prepare_data=sales_forecasting.data_preparation:main",
+            "train=app.train:main",
+            "inference=app.inference:main",
+            "prepare_data=app.data_preparation:main",
         ],
     },
 )
