@@ -49,7 +49,7 @@ class TestUtils(unittest.TestCase):
         X = self.sample_data[['feature1', 'feature2']]
         y = self.sample_data['UnitSales']
         
-        rmse, mae = evaluate_model(self.sample_model, X, y)
+        predictions, rmse, mae = evaluate_model(self.sample_model, X, y)
         
         self.assertIsInstance(rmse, float)
         self.assertIsInstance(mae, float)
