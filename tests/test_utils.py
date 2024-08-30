@@ -35,7 +35,7 @@ class TestUtils(unittest.TestCase):
 
     def test_load_processed_data(self):
         # Save sample data to a temporary file
-        temp_file = os.path.join(self.temp_dir, 'test_data.csv')
+        temp_file = os.path.join(self.temp_dir, 'sample_data.csv')
         self.sample_data.to_csv(temp_file, index=False)
 
         # Test loading the data
