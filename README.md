@@ -131,10 +131,6 @@ To containerize the application, use the provided Dockerfile.
 
 The Flask API will be available at `http://localhost:8080`.
 
-## Contributing
+## Architecture
 
-[Include information about how to contribute to the project]
-
-## License
-
-[Specify the license under which this project is released]
+![alt text](architecture.png)
