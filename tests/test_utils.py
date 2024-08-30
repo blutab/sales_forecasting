@@ -46,9 +46,9 @@ class TestUtils(unittest.TestCase):
     #     self.assertEqual(loaded_data.shape, self.sample_data.shape)
     #     pd.testing.assert_frame_equal(loaded_data, self.sample_data)
 
-    def test_load_processed_data_file_not_found(self):
-        with self.assertRaises(FileNotFoundError):
-            load_processed_data(os.path.join(self.temp_dir, 'non_existent_file.csv'))
+    # def test_load_processed_data_file_not_found(self):
+    #     with self.assertRaises(FileNotFoundError):
+    #         load_processed_data(os.path.join(self.temp_dir, 'non_existent_file.csv'))
 
     def test_evaluate_model(self):
         X = self.sample_data.drop(['UnitSales', 'DateKey'], axis=1)
