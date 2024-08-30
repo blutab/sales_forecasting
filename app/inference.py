@@ -3,18 +3,17 @@ import numpy as np
 import mlflow
 import logging
 from app.config import Config
-from app.utils import load_model, evaluate_model, load_processed_data
+from app.utils import load_model_from_registry, evaluate_model, load_processed_data
 
 # Set up logging
 logging.basicConfig(
     level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-
 class Inferencer:
     def __init__(self, config: Config):
         self.config = config
-        self.model = load_model(Config.MODEL_PATH)
+        self.model = load_model_from_registry(config.MODEL_NAME, config.MODEL_STAGE)
 
     def convert_log_to_units(self, prediction: float) -> int:
         return np.round(np.exp(prediction))
@@ -40,13 +39,11 @@ class Inferencer:
             )
             return converted_predictions
 
-
 def main():
     inferencer = Inferencer(Config)
     test_df = load_processed_data(Config.PROCESSED_TEST_PATH)
     predictions = inferencer.get_predictions(test_df)
     return predictions
-
 
 if __name__ == "__main__":
     main()

@@ -11,3 +11,5 @@ class Config:
     LAGS = [7, 14, 21]
     LOGGING_LEVEL = logging.INFO
     DEBUG = True
+    MODEL_NAME = "RandomForestRegressor"  # or whatever name you used in the registry
+    MODEL_STAGE = "Staging"  # o
