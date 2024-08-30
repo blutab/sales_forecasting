@@ -15,8 +15,7 @@ The model, built with a `RandomForestRegressor` from Scikit-learn, and encompass
 - [Model Evaluation](#model-evaluation)
 - [Testing](#testing)
 - [Docker Setup](#docker-setup)
-- [Contributing](#contributing)
-- [License](#license)
+- [Architecture](#Architecture)
 
 ## Directory Structure
 
