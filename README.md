@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project develops a sales forecasting model to help Albert Heijn run successful promotion campaigns. This model predicts the effect of promotions on sales for various items which is crucial for campaign planning and stock level discussions with suppliers.
+This project develops a sales forecasting model to help a ecommerce company run successful promotion campaigns. This model predicts the effect of promotions on sales for various items which is crucial for campaign planning and stock level discussions with suppliers.
 The model, built with a `RandomForestRegressor` from Scikit-learn, and encompasses data preprocessing, model training, evaluation, and an API for predictions.
 
 ## Table of Contents
