@@ -4,16 +4,21 @@ import mlflow
 import mlflow.sklearn
 import logging
 from app.config import Config
-from app.utils import load_processed_data, evaluate_model,save_model
+from app.utils import load_processed_data, evaluate_model, save_model
 
 # Set up logging
-logging.basicConfig(level=Config.LOGGING_LEVEL, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 class ModelTrainer:
     def __init__(self, config: Config):
         self.config = config
 
-    def train_model(self,train_X: pd.DataFrame, train_y: pd.Series, model_params: dict) -> RandomForestRegressor:
+    def train_model(
+        self, train_X: pd.DataFrame, train_y: pd.Series, model_params: dict
+    ) -> RandomForestRegressor:
         """
         Train a RandomForestRegressor model.
 
@@ -29,7 +34,7 @@ class ModelTrainer:
         - RandomForestRegressor : Trained model.
         """
         logging.info(f"Training RandomForestRegressor model with {model_params}")
-        
+
         model = RandomForestRegressor(**model_params)
         model.fit(train_X, train_y)
         logging.info("Model training completed")
@@ -38,14 +43,14 @@ class ModelTrainer:
     def run_training(self):
         with mlflow.start_run():
             train_df = load_processed_data(self.config.PROCESSED_TRAIN_PATH)
-            train_y = train_df['UnitSales']
-            train_X = train_df.drop(columns=['UnitSales', 'DateKey'])
+            train_y = train_df["UnitSales"]
+            train_X = train_df.drop(columns=["UnitSales", "DateKey"])
 
             MODEL_PARAMS = {
-                'n_estimators': 100,
-                'max_features': round(len(train_X.columns) / 3),
-                'max_depth': len(train_X.columns),
-                'random_state': 42
+                "n_estimators": 100,
+                "max_features": round(len(train_X.columns) / 3),
+                "max_depth": len(train_X.columns),
+                "random_state": 42,
             }
 
             mlflow.log_params(MODEL_PARAMS)
@@ -61,11 +66,11 @@ class ModelTrainer:
 
             logging.info(f"Model trained and saved to {Config.MODEL_PATH}")
 
-    
+
 def main():
     trainer = ModelTrainer(Config)
     trainer.run_training()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
