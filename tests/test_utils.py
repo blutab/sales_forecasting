@@ -19,6 +19,9 @@ class TestUtils(unittest.TestCase):
             'UnitSales': np.random.randint(1, 100, 100),
             'DateKey': pd.date_range(start='2023-01-01', periods=100)
         })
+
+        # Reorder columns to match the expected shape
+        self.sample_data = self.sample_data[['feature1', 'feature2', 'UnitSales', 'DateKey']]
         
         # Create a sample model
         self.sample_model = RandomForestRegressor(n_estimators=10, random_state=42)
