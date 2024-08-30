@@ -1,6 +1,7 @@
 import pandas as pd
 import logging
 import mlflow
+import pickle
 from typing import Any, Tuple
 from app.config import Config
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error
@@ -47,19 +48,27 @@ def load_model_from_registry(model_name: str, stage: str = "Production") -> Any:
     Returns:
     - Any : Loaded model object.
     """
-    logging.info(f"Loading {stage} model '{model_name}' from MLflow Model Registry")
     try:
+        logging.info(f"Loading {stage} model '{model_name}' from MLflow Model Registry")
         model = mlflow.pyfunc.load_model(f"models:/{model_name}/{stage}")
         logging.info(
             f"Successfully loaded {stage} model '{model_name}' from MLflow Model Registry"
         )
         return model
-    except mlflow.exceptions.MlflowException as e:
-        logging.error(
-            f"Error loading model '{model_name}' from MLflow Model Registry: {e}"
-        )
-        raise e
-
+    except:
+        path = Config.MODEL_PATH
+        logging.info(f"Loading model from {path}")
+        try:
+            with open(path, "rb") as f:
+                model = pickle.load(f)
+            logging.info("Model loaded successfully")
+            return model
+        except FileNotFoundError as e:
+            logging.error(f"Model file not found: {path}")
+            raise e
+        except Exception as e:
+            logging.error(f"Error loading model from {path}: {e}")
+            raise e
 
 def save_model(model: Any, path: str):
     """
@@ -71,7 +80,8 @@ def save_model(model: Any, path: str):
     """
     logging.info(f"Saving model to {path}")
     try:
-        mlflow.sklearn.save_model(model, path)
+        with open(path, "wb") as f:
+            pickle.dump(model, f)
         logging.info(f"Model saved successfully to {path}")
     except Exception as e:
         logging.error(f"Error saving model to {path}: {e}")

@@ -33,22 +33,18 @@ class TestUtils(unittest.TestCase):
         y = self.sample_data['UnitSales']
         self.sample_model.fit(X, y)
 
-    # def test_load_processed_data(self):
-    #     # Save sample data to a temporary file
-    #     temp_file = os.path.join(self.temp_dir, 'sample_data.csv')
-    #     self.sample_data.to_csv(temp_file, index=False)
+    def test_load_processed_data(self):
+        # Save sample data to a temporary file
+        temp_file = os.path.join(self.temp_dir, 'sample_data.csv')
+        self.sample_data.to_csv(temp_file, index=False)
 
-    #     # Test loading the data
-    #     loaded_data = load_processed_data(temp_file)
-    #     loaded_data['DateKey'] = pd.to_datetime(loaded_data['DateKey'])
+        # Test loading the data
+        loaded_data = load_processed_data(temp_file)
+        loaded_data['DateKey'] = pd.to_datetime(loaded_data['DateKey'])
 
-    #     self.assertIsInstance(loaded_data, pd.DataFrame)
-    #     self.assertEqual(loaded_data.shape, self.sample_data.shape)
-    #     pd.testing.assert_frame_equal(loaded_data, self.sample_data)
-
-    # def test_load_processed_data_file_not_found(self):
-    #     with self.assertRaises(FileNotFoundError):
-    #         load_processed_data(os.path.join(self.temp_dir, 'non_existent_file.csv'))
+        self.assertIsInstance(loaded_data, pd.DataFrame)
+        self.assertEqual(loaded_data.shape, self.sample_data.shape)
+        pd.testing.assert_frame_equal(loaded_data, self.sample_data)
 
     def test_evaluate_model(self):
         X = self.sample_data.drop(['UnitSales', 'DateKey'], axis=1)
