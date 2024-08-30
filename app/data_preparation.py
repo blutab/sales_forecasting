@@ -91,8 +91,10 @@ class DataPreprocessor:
         test_df = df[df["DateKey"].dt.date > split_date]
         return train_df, test_df
 
-    def add_lagged_features(self, df: pd.DataFrame,
-                            feature: str) -> pd.DataFrame:
+    def add_lagged_features(
+            self,
+            df: pd.DataFrame,
+            feature: str) -> pd.DataFrame:
         """
         Add lagged features to the DataFrame.
 
@@ -111,12 +113,16 @@ class DataPreprocessor:
         df = df.sort_values(by=["ItemNumber", "DateKey"])
 
         for lag in Config.LAGS:
-            df[f"{feature}_lag_{lag}"] = df.groupby("ItemNumber",
-                                    observed=False)[feature].shift(lag)
+            df[f"{feature}_lag_{lag}"] = df.groupby(
+                "ItemNumber", observed=False
+                )[
+                feature
+            ].shift(lag)
 
         return df.dropna()
 
-    def save_processed_data(self, train_df: pd.DataFrame,
+    def save_processed_data(self,
+                            train_df: pd.DataFrame,
                             test_df: pd.DataFrame):
         """
         Save the processed training and test data to CSV files.
@@ -125,9 +131,11 @@ class DataPreprocessor:
         - train_df: pd.DataFrame : The training DataFrame to be saved.
         - test_df: pd.DataFrame : The test DataFrame to be saved.
         """
-        logging.info(f"Saving processed training data to {Config.PROCESSED_TRAIN_PATH}")
+        logging.info("Saving processed training data to "
+                     f"{Config.PROCESSED_TRAIN_PATH}")
         train_df.to_csv(Config.PROCESSED_TRAIN_PATH, index=False)
-        logging.info(f"Saving processed test data to {Config.PROCESSED_TEST_PATH}")
+        logging.info("Saving processed test data to "
+                     f"{Config.PROCESSED_TEST_PATH}")
         test_df.to_csv(Config.PROCESSED_TEST_PATH, index=False)
 
 
@@ -146,7 +154,7 @@ def main():
     test_df_lag = preprocessor.add_lagged_features(test_df, "UnitSales")
 
     preprocessor.save_processed_data(train_df_lag, test_df_lag)
-    logging.info(f"Processed data saved successfully.")
+    logging.info("Processed data saved successfully.")
 
 
 if __name__ == "__main__":

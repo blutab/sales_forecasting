@@ -7,7 +7,8 @@ from sklearn.metrics import root_mean_squared_error, mean_absolute_error
 
 
 logging.basicConfig(
-    level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=Config.LOGGING_LEVEL,
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 

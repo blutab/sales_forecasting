@@ -8,7 +8,8 @@ from app.utils import load_processed_data, evaluate_model, save_model
 
 # Set up logging
 logging.basicConfig(
-    level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=Config.LOGGING_LEVEL,
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -26,14 +27,16 @@ class ModelTrainer:
         - train_X: pd.DataFrame : Features for training.
         - train_y: pd.Series : Target variable for training.
         - n_estimators: int : The number of trees in the forest (default: 100).
-        - max_features: float : The number of features to consider when looking for the best split (default: 0.33).
+        - max_features: float : The number of features to consider
+                            when looking for the best split (default: 0.33).
         - max_depth: int : The maximum depth of the tree (default: None).
         - random_state: int : Random seed (default: 42).
 
         Returns:
         - RandomForestRegressor : Trained model.
         """
-        logging.info(f"Training RandomForestRegressor model with {model_params}")
+        logging.info("Training RandomForestRegressor "
+                     f"model with {model_params}")
 
         model = RandomForestRegressor(**model_params)
         model.fit(train_X, train_y)

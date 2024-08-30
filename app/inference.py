@@ -7,7 +7,8 @@ from app.utils import load_model, evaluate_model, load_processed_data
 
 # Set up logging
 logging.basicConfig(
-    level=Config.LOGGING_LEVEL, format="%(asctime)s - %(levelname)s - %(message)s"
+    level=Config.LOGGING_LEVEL,
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
@@ -34,7 +35,8 @@ class Inferencer:
             example_pred = self.model.predict(test_X.head(1))
             logging.info(f"Example prediction (log scale): {example_pred[0]}")
             logging.info(
-                f"Predicted UnitSales: {self.convert_log_to_units(example_pred[0])}"
+                "Predicted UnitSales: "
+                f"{self.convert_log_to_units(example_pred[0])}"
             )
 
 
