@@ -1,9 +1,7 @@
 import pandas as pd
-import pickle
 import math
 import mlflow
 import logging
-from typing import Tuple, Any
 from app.config import Config
 from app.utils import load_model, evaluate_model, load_processed_data
 

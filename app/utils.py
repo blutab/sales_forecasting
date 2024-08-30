@@ -1,9 +1,7 @@
 import pandas as pd
-import numpy as np
-import datetime
 import logging
 import pickle
-from typing import Any, Tuple, List
+from typing import Any, Tuple
 from app.config import Config
 from sklearn.metrics import root_mean_squared_error, mean_absolute_error
 
