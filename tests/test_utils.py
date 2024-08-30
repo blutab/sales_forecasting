@@ -16,18 +16,20 @@ class TestUtils(unittest.TestCase):
 
         # Create a sample DataFrame
         self.sample_data = pd.DataFrame({
+            'UnitSales': np.random.randint(1, 100, 100),
+            'DateKey': pd.date_range(start='2023-01-01', periods=100),
             'feature1': np.random.rand(100),
             'feature2': np.random.rand(100),
-            'UnitSales': np.random.randint(1, 100, 100),
-            'DateKey': pd.date_range(start='2023-01-01', periods=100)
+            'feature3': np.random.rand(100),
+            'feature4': np.random.rand(100),
+            'feature5': np.random.rand(100),
+            'feature6': np.random.rand(100),
+            'feature7': np.random.rand(100)
         })
-
-        # Reorder columns to match the expected shape
-        self.sample_data = self.sample_data[['feature1', 'feature2', 'UnitSales', 'DateKey']]
 
         # Create a sample model
         self.sample_model = RandomForestRegressor(n_estimators=10, random_state=42)
-        X = self.sample_data[['feature1', 'feature2']]
+        X = self.sample_data.drop(['UnitSales', 'DateKey'], axis=1)
         y = self.sample_data['UnitSales']
         self.sample_model.fit(X, y)
 
@@ -39,16 +41,17 @@ class TestUtils(unittest.TestCase):
         # Test loading the data
         loaded_data = load_processed_data(temp_file)
         loaded_data['DateKey'] = pd.to_datetime(loaded_data['DateKey'])
+
         self.assertIsInstance(loaded_data, pd.DataFrame)
         self.assertEqual(loaded_data.shape, self.sample_data.shape)
         pd.testing.assert_frame_equal(loaded_data, self.sample_data)
 
     def test_load_processed_data_file_not_found(self):
         with self.assertRaises(FileNotFoundError):
-            load_processed_data('non_existent_file.csv')
+            load_processed_data(os.path.join(self.temp_dir, 'non_existent_file.csv'))
 
     def test_evaluate_model(self):
-        X = self.sample_data[['feature1', 'feature2']]
+        X = self.sample_data.drop(['UnitSales', 'DateKey'], axis=1)
         y = self.sample_data['UnitSales']
 
         predictions, rmse, mae = evaluate_model(self.sample_model, X, y)
